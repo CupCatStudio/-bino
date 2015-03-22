@@ -1,0 +1,67 @@
+import java.util.*;
+public class check3 {
+    public static void main(String[] args) {
+    	int n = 300;
+    	double p = 0.4;
+        findMaxY(n,p,n*p);
+        System.out.printf("%.6f %.0f %.0f %.0f",maxY,maxXY,maxX,minX);
+    }
+    
+    public static double binomial (double n, double p, double x){
+    	double out = Math.pow(p,x)*Math.pow(1-p,n-x);
+    	for(double i=n,j=x,k=n-x; i>0; i--,j--,k--){
+    		out *= i;
+    		if(j>0) out/=j;
+    		if(k>0) out/=k;
+    	}
+    	return out;
+    }
+    
+    public static double maxX, maxY, maxXY,minX;
+    
+    public static void findMaxY(int n, double p, double x){
+    	double check = binomial(n,p,x);
+    	if(check < binomial(n,p,Math.floor(x/2))) {
+    		findMaxY(n, p, Math.floor(x/2));}
+    	else if(check < binomial(n, p, Math.floor(x*1.5))) {
+    		findMaxY(n, p, Math.floor(x*1.5));}
+    	else {
+    			maxXY = x;
+    			maxY = check;
+    			findMaxX(n, p, Math.floor(maxXY+(n-maxXY)/2), Math.floor(n));
+    			findMinX(n, p, Math.floor((maxXY)/2), maxXY);
+    		}
+    } 
+    public static void findMaxX(int n, double p, double x, double before){
+    	double check = binomial(n,p,x); // 240
+    	
+    	if(Math.floor((before-x)/2) == 1){
+    			maxX=x;
+    	}
+    	else if(Math.ceil(check*100000) >= 0.0 && Math.ceil(check*100000) <= 1.0){
+    		findMaxX(n,p,Math.floor(maxXY+(x-maxXY)/2), x);
+    	}
+    	else {
+    		findMaxX(n,p,Math.floor(x+(before-x)/2), before); 
+    			
+    	}
+	}
+    
+    public static void findMinX(int n, double p, double x, double before){
+    	double check = binomial(n,p,x); // 240
+    	System.out.println("                " + Math.floor((before-x)/2) + " " + check);
+    	if(Math.floor((before-x)/2) == 1){
+    			minX=x;
+    	}
+    	else if(Math.ceil(check*100000) >= 0.0 && Math.ceil(check*100000) <= 1.0){ // check == 0
+    		System.out.println("2 " + Math.floor(check*100000));
+    		findMinX(n,p,Math.floor(x+(before-x)/2), before);
+    	}
+    	else {
+    		System.out.println("3 " + "");
+    		findMinX(n,p,Math.floor(before/2), x);
+    			
+    	}
+	}
+    
+}
